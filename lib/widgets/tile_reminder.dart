@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:alarm/alarm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,12 @@ class TileReminder extends StatelessWidget{
     return colors[Random().nextInt(11)];
   }
 
+  bool _isBellRinging = true;
+
+  void onTap(){
+    Alarm.stop(42);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,31 +44,57 @@ class TileReminder extends StatelessWidget{
 
         borderRadius: BorderRadius.circular(8.0), // Optional: Add rounded corners
       ),
-      child: const Center(
-        child: Column(
-          children: [
-            Text(
-              'Send email to Anita',
-              style: TextStyle(
-                color: Colors.black, // Set the text color
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold// Set the text font size
-              ),
-            ),
-            SizedBox(height: 10,),
-            Expanded(
-              child: Text(
-                'Send email regarding vouchers to employee. This is just sample description to show the '
-                    'use of this app.',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                style: TextStyle(
-                  color: Colors.black, // Set the text color
-                  fontSize: 16.0, // Set the text font size
+      child: GestureDetector(
+        onTap: onTap,
+        child:  Center(
+          child: Column(
+            children: [
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    // setState(() {
+                    //   _isBellRinging = !_isBellRinging;
+                    // });
+                  },
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _isBellRinging ? Colors.yellow : Colors.grey,
+                    ),
+                    child: Icon(
+                      Icons.notifications,
+                      size: 20,
+                      color: _isBellRinging ? Colors.black : Colors.white,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+              Text(
+                'Send email to Anita',
+                style: TextStyle(
+                  color: Colors.black, // Set the text color
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold// Set the text font size
+                ),
+              ),
+              SizedBox(height: 10,),
+              Expanded(
+                child: Text(
+                  'Send email regarding vouchers to employee. This is just sample description to show the '
+                      'use of this app.',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  style: TextStyle(
+                    color: Colors.black, // Set the text color
+                    fontSize: 16.0, // Set the text font size
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
