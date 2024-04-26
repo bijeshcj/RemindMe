@@ -3,8 +3,20 @@ import 'dart:math';
 import 'package:alarm/alarm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:remind_me/database/todo_db.dart';
 
-class TileReminder extends StatelessWidget{
+import '../models/todo.dart';
+
+class TileReminder extends StatefulWidget{
+
+
+  TileReminder({super.key});
+
+  @override
+  State<TileReminder> createState() => _TileReminderState();
+}
+
+class _TileReminderState extends State<TileReminder> {
 
   List<MaterialColor> colors = [
     Colors.red,
@@ -21,13 +33,26 @@ class TileReminder extends StatelessWidget{
     Colors.grey
   ];
 
-  TileReminder({super.key});
+  Future<List<ToDo>>? futureTodos;
+  final todoDb = TodoDB();
+
+
+  @override
+  void initState(){
+    fetchTodos();
+  }
+
+  void fetchTodos(){
+    setState(() {
+      futureTodos = todoDb.fetchAll();
+    });
+  }
 
   MaterialColor getRandomColor(){
     return colors[Random().nextInt(11)];
   }
 
-  bool _isBellRinging = true;
+  bool _isBellRinging = false;
 
   void onTap(){
     Alarm.stop(42);
@@ -58,15 +83,15 @@ class TileReminder extends StatelessWidget{
                   },
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 300),
-                    width: 30,
-                    height: 30,
+                    width: 20,
+                    height: 20,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _isBellRinging ? Colors.yellow : Colors.grey,
                     ),
                     child: Icon(
                       Icons.notifications,
-                      size: 20,
+                      size: 15,
                       color: _isBellRinging ? Colors.black : Colors.white,
                     ),
                   ),
